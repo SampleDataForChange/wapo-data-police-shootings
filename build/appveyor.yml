@@ -33,7 +33,7 @@ environment:
     
   - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
     MSSQL: SQL2012SP1
-    DB_INSTANCE: SQL2012SP1
+    DB_INSTANCE: (local)\SQL2012SP1
 
 install:
 - ps: Install-Module DbaTools -Force -AllowClobber
@@ -45,7 +45,7 @@ install:
 
 build_script:
 - echo Building database with latest data
-- ps: ./build/build.ps1 -SqlInstance $env:DB_INSTANCE -SqlLogin $env:MSSQL_LOGIN -SqlPass $env:MSSQL_PASS
+- ps: ./build/build.ps1 -SqlInstance "$env:DB_INSTANCE" -SqlLogin "$env:MSSQL_LOGIN" -SqlPass "$env:MSSQL_PASS"
 
 on_success:
   - git config --global credential.helper store

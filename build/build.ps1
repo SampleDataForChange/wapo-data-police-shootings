@@ -30,9 +30,8 @@ If ($PSBoundParameters.ContainsKey('SqlLogin') -and $PSBoundParameters.ContainsK
 }
 
 # Update submodule
-Set-Location -Path $WapoRoot
-git fetch
-git merge origin/master -q
+git submodule init 
+git submodule update
 
 #Build database
 Set-Location $RepoRoot
