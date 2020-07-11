@@ -1,0 +1,56 @@
+version: 0.0.{build}
+
+pull_requests:
+  do_not_increment_build_number: false
+  
+max_jobs: 1
+
+clone_folder: C:\wapo-data-police-shootings
+
+environment:
+  my_variable:
+    secure: VANUwPuFnS9gOTlQKMEUU2S2/y2do5xnwKFmeDDhfjUVm06fGyAdqRLhb+T2QJQz
+
+  MSSQL_LOGIN: sa
+  MSSQL_PASS: Password12!
+  
+  matrix:
+  #- APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+  #  MSSQL: SQL2019
+  #  DB_INSTANCE: (local)\SQL2019
+    
+  #- APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+  #  MSSQL: SQL2017
+  #  DB_INSTANCE: (local)\SQL2017
+    
+  #- APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+  #  MSSQL: SQL2016
+  #  DB_INSTANCE: (local)\SQL2016
+    
+  #- APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+  #  MSSQL: SQL2014
+  #  DB_INSTANCE: (local)\SQL2014
+    
+  - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+    MSSQL: SQL2012SP1
+    DB_INSTANCE: (local)\SQL2012SP1
+
+install:
+- ps: Install-Module DbaTools -Force -AllowClobber
+
+- echo Starting SQL Server
+- ps: >-
+    $SQLInstance = $env:MSSQL;
+    Start-Service "MSSQL`$$SQLInstance";
+
+build_script:
+- echo Building database with latest data
+- ps: ./build/build.ps1 -SqlInstance $env:DB_INSTANCE
+
+on_success:
+  - git config --global credential.helper store
+  - ps: Add-Content -Path "$HOME\.git-credentials" -Value "https://$($env:access_token):x-oauth-basic@github.com`n" -NoNewline
+  - git config --global user.email "Your email"
+  - git config --global user.name "Your Name"
+  - git commit ...
+  - git push ...
