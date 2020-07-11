@@ -1,5 +1,6 @@
-﻿[CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'Low')]
+﻿[CmdletBinding()]
     param (
+        [Parameter(Mandatory)]
         [string]$SqlInstance
     )
 
