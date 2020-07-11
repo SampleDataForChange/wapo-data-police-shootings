@@ -45,12 +45,12 @@ install:
 
 build_script:
 - echo Building database with latest data
-- ps: ./build/build.ps1 -SqlInstance $env:DB_INSTANCE
+- ps: ./build/build.ps1 -SqlInstance $env:DB_INSTANCE -SqlLogin $env:MSSQL_LOGIN -SqlPass $env:MSSQL_PASS
 
 on_success:
   - git config --global credential.helper store
   - ps: Add-Content -Path "$HOME\.git-credentials" -Value "https://$($env:access_token):x-oauth-basic@github.com`n" -NoNewline
-  - git config --global user.email "Your email"
-  - git config --global user.name "Your Name"
-  - git commit ...
-  - git push ...
+  - git config --global user.email "john@lowlydba.com"
+  - git config --global user.name "John McCall"
+  - git commit -a -m "Auto add new database build."
+  - git push origin/master
