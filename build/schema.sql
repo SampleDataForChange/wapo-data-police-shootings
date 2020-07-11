@@ -271,7 +271,7 @@ BEGIN
 
 	--Drop FKs
 	IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[PoliceShootings]') AND type in (N'U'))
-	ALTER TABLE [dbo].[PoliceShootings] DROP CONSTRAINT IF EXISTS [fk_policeshootings_armed];
+	ALTER TABLE [dbo].[PoliceShootings] DROP CONSTRAINT [fk_policeshootings_armed];
 
 	--Clear table
 	TRUNCATE TABLE dbo.Armed;
@@ -307,7 +307,7 @@ BEGIN
 
 	--Drop FKs
 	IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[PoliceShootings]') AND type in (N'U'))
-	ALTER TABLE [dbo].[PoliceShootings] DROP CONSTRAINT IF EXISTS [fk_policeshootings_city]
+	ALTER TABLE [dbo].[PoliceShootings] DROP CONSTRAINT [fk_policeshootings_city]
 
 	--Clear table
 	TRUNCATE TABLE dbo.City;
@@ -345,7 +345,7 @@ BEGIN
 
 	--Drop FKs
 	IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[PoliceShootings]') AND type in (N'U'))
-	ALTER TABLE [dbo].[PoliceShootings] DROP CONSTRAINT IF EXISTS [fk_policeshootings_fleetype];
+	ALTER TABLE [dbo].[PoliceShootings] DROP CONSTRAINT [fk_policeshootings_fleetype];
 
 	--Clear table
 	TRUNCATE TABLE dbo.Flee;
@@ -381,7 +381,7 @@ BEGIN
 
 	--Drop FKs
 	IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[PoliceShootings]') AND type in (N'U'))
-	ALTER TABLE [dbo].[PoliceShootings] DROP CONSTRAINT IF EXISTS [fk_policeshootings_mannerofdeath];
+	ALTER TABLE [dbo].[PoliceShootings] DROP CONSTRAINT [fk_policeshootings_mannerofdeath];
 
 	--Clear table
 	TRUNCATE TABLE dbo.MannerOfDeath;
@@ -475,7 +475,7 @@ BEGIN
 
 	--Drop FKs
 	IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[PoliceShootings]') AND type in (N'U'))
-	ALTER TABLE [dbo].[PoliceShootings] DROP CONSTRAINT IF EXISTS [fk_policeshootings_race]
+	ALTER TABLE [dbo].[PoliceShootings] DROP CONSTRAINT [fk_policeshootings_race]
 
 	--Clear table
 	TRUNCATE TABLE dbo.Race;
@@ -513,7 +513,7 @@ BEGIN
 
 	--Drop FKs
 	IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[PoliceShootings]') AND type in (N'U'))
-	ALTER TABLE [dbo].[PoliceShootings] DROP CONSTRAINT IF EXISTS [fk_policeshootings_sex]
+	ALTER TABLE [dbo].[PoliceShootings] DROP CONSTRAINT [fk_policeshootings_sex]
 
 	--Clear table
 	TRUNCATE TABLE dbo.Sex;
@@ -550,7 +550,7 @@ BEGIN
 
 	--Drop FKs
 	IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[City]') AND type in (N'U'))
-	ALTER TABLE [dbo].[City] DROP CONSTRAINT IF EXISTS [fk_city_state]
+	ALTER TABLE [dbo].[City] DROP CONSTRAINT [fk_city_state]
 
 	--Clear table
 	TRUNCATE TABLE dbo.States;
@@ -647,7 +647,7 @@ BEGIN
 
 	--Drop FKs
 	IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[PoliceShootings]') AND type in (N'U'))
-	ALTER TABLE [dbo].[PoliceShootings] DROP CONSTRAINT IF EXISTS [fk_policeshootings_threatlevel];
+	ALTER TABLE [dbo].[PoliceShootings] DROP CONSTRAINT [fk_policeshootings_threatlevel];
 
 	--Clear table
 	TRUNCATE TABLE dbo.ThreatLevel;
