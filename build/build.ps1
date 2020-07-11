@@ -30,8 +30,8 @@ If ($PSBoundParameters.ContainsKey('SqlLogin') -and $PSBoundParameters.ContainsK
 }
 
 # Update submodule
-git submodule init 
-git submodule update
+git submodule init -q
+git submodule update -q
 
 #Build database
 Set-Location $RepoRoot

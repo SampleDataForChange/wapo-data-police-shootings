@@ -33,7 +33,7 @@ environment:
     
   - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
     MSSQL: SQL2012SP1
-    DB_INSTANCE: (local)\SQL2012SP1
+    DB_INSTANCE: localhost\SQL2012SP1
 
 install:
 - ps: Install-Module DbaTools -Force -AllowClobber
@@ -52,5 +52,6 @@ on_success:
   - ps: Add-Content -Path "$HOME\.git-credentials" -Value "https://$($env:access_token):x-oauth-basic@github.com`n" -NoNewline
   - git config --global user.email "john@lowlydba.com"
   - git config --global user.name "John McCall"
+  - git checkout origin/master
   - git commit -a -m "Auto add new database build."
   - git push origin/master
