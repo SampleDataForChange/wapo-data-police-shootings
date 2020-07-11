@@ -16,12 +16,12 @@ If (!(Get-Module DbaTools)) {
 $SqlDatabase = "wapo-data-police-shootings"
 $SchemaFile = Join-Path $PSScriptRoot "schema.sql"
 $PopulateFile = Join-Path $PSScriptRoot "populate.sql"
-$DataPath = Join-Path $PSScriptRoot "fatal-police-shootings-data.csv"
 $ImportTable = "PoliceShootings"
 $ImportSchema = "stage"
 $RepoRoot = Split-Path -Parent $PSScriptRoot
 $BackupDest = (Join-Path $RepoRoot "db")
 $WapoRoot = (Join-Path $RepoRoot "data-police-shootings")
+$CsvFile = (Join-Path $WapoRoot "fatal-police-shootings-data.csv")
 
 # Create credential if SQL Auth is being used
 If ($PSBoundParameters.ContainsKey('SqlLogin') -and $PSBoundParameters.ContainsKey('SqlPass')) {
@@ -38,10 +38,12 @@ Set-Location $RepoRoot
 Stop-DbaProcess -SqlInstance $SqlInstance -Database $SqlDatabase -SqlCredential $SqlCred | Out-Null
 Remove-DbaDatabase -SqlInstance $SqlInstance -Database $SqlDatabase -Confirm:$false -SqlCredential $SqlCred | Out-Null
 New-DbaDatabase -SqlInstance $SqlInstance -Database $SqlDatabase -Recoverymodel Simple -Owner "sa" -SqlCredential $SqlCred | Out-Null
-Invoke-DbaQuery -SqlInstance $SqlInstance -Database $SqlDatabase -File $SchemaFile -SqlCredential $SqlCred
-Import-DbaCsv -Path $DataPath -SqlInstance $SqlInstance -Database $SqlDatabase -Table $ImportTable -Schema $ImportSchema -AutoCreateTable -SqlCredential $SqlCred | Out-Null
-Invoke-DbaQuery -SqlInstance $SqlInstance -Database $SqlDatabase -File $PopulateFile -SqlCredential $SqlCred
+Invoke-DbaQuery -SqlInstance $SqlInstance -Database $SqlDatabase -File $SchemaFile -SqlCredential $SqlCred -EnableException
+Import-DbaCsv -Path $CsvFile -SqlInstance $SqlInstance -Database $SqlDatabase -Table $ImportTable -Schema $ImportSchema `
+    -AutoCreateTable -SqlCredential $SqlCred -EnableException | Out-Null
+Invoke-DbaQuery -SqlInstance $SqlInstance -Database $SqlDatabase -File $PopulateFile -SqlCredential $SqlCred -EnableException
 
 #Create backups
 Remove-Item -Path (Join-Path $BackupDest *.bak) -Force
-Backup-DbaDatabase -SqlInstance $SqlInstance -Database $SqlDatabase -Path $BackupDest -CompressBackup -Verify -FileCount 1 -IgnoreFileChecks -BuildPath -SqlCredential $SqlCred
+Backup-DbaDatabase -SqlInstance $SqlInstance -Database $SqlDatabase -Path $BackupDest -Verify -FileCount 1 `
+    -IgnoreFileChecks -BuildPath -SqlCredential $SqlCred
