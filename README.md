@@ -9,7 +9,8 @@ This project aims to make the Washington Post's police shooting data more easily
 accessible as sample data for examples, testing, and documentation as part of
 [Sample Data for Change][sdfc].
 
-A database backup compatible with SQL Server 2012+ can be found in the `\db` folder.
+Fully featured databases are packaged into releases based off the latest raw data
+available as of build time.
 
 ## Notable Modifications
 

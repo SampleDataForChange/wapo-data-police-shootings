@@ -6,5 +6,6 @@ EXEC dbo.sp_ReloadRace;
 EXEC dbo.sp_ReloadSex;
 EXEC dbo.sp_ReloadStates;
 EXEC dbo.sp_ReloadThreatLevel;
+EXEC dbo.sp_ReloadArmed;
 
 EXEC dbo.sp_ReloadPoliceShootings;

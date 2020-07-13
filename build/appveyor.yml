@@ -57,7 +57,7 @@ after_build:
 
 deploy:
   release: wapo-data-police-shootings-$(BUILDDATE)-$(appveyor_build_version)
-  description: 'Release'
+  description: 'Automated release of newest police shootings data'
   provider: GitHub
   auth_token:
     secure: VANUwPuFnS9gOTlQKMEUU2S2/y2do5xnwKFmeDDhfjUVm06fGyAdqRLhb+T2QJQz # your encrypted token from GitHub
