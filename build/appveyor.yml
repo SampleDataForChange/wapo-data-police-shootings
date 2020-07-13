@@ -12,8 +12,6 @@ max_jobs: 1
 clone_folder: C:\wapo-data-police-shootings
 
 environment:
-  TOKEN:
-    secure: VANUwPuFnS9gOTlQKMEUU2S2/y2do5xnwKFmeDDhfjUVm06fGyAdqRLhb+T2QJQz
 
   MSSQL_LOGIN: sa
   MSSQL_PASS: Password12!
@@ -62,7 +60,7 @@ deploy:
   description: 'Release'
   provider: GitHub
   auth_token:
-    secure: $env:TOKEN
+    secure: VANUwPuFnS9gOTlQKMEUU2S2/y2do5xnwKFmeDDhfjUVm06fGyAdqRLhb+T2QJQz # your encrypted token from GitHub
   artifact: /.*\.bak/
   draft: false
   prerelease: false
