@@ -30,8 +30,7 @@ If ($PSBoundParameters.ContainsKey('SqlLogin') -and $PSBoundParameters.ContainsK
 }
 
 # Update submodule
-git submodule init -q
-git submodule update -q
+
 
 #Build database
 Set-Location $RepoRoot
@@ -40,7 +39,7 @@ Remove-DbaDatabase -SqlInstance $SqlInstance -Database $SqlDatabase -Confirm:$fa
 New-DbaDatabase -SqlInstance $SqlInstance -Database $SqlDatabase -Recoverymodel Simple -Owner "sa" -SqlCredential $SqlCred | Out-Null
 Invoke-DbaQuery -SqlInstance $SqlInstance -Database $SqlDatabase -File $SchemaFile -SqlCredential $SqlCred -EnableException
 Import-DbaCsv -Path $CsvFile -SqlInstance $SqlInstance -Database $SqlDatabase -Table $ImportTable -Schema $ImportSchema `
-    -AutoCreateTable -SqlCredential $SqlCred -EnableException | Out-Null
+    -AutoCreateTable -SqlCredential $SqlCred -EnableException
 Invoke-DbaQuery -SqlInstance $SqlInstance -Database $SqlDatabase -File $PopulateFile -SqlCredential $SqlCred -EnableException
 
 #Create backups

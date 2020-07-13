@@ -36,22 +36,24 @@ environment:
     DB_INSTANCE: localhost\SQL2012SP1
 
 install:
-- ps: Install-Module DbaTools -Force -AllowClobber
+  - ps: Install-Module DbaTools -Force -AllowClobber
 
-- echo Starting SQL Server
-- ps: >-
-    $SQLInstance = $env:MSSQL;
-    Start-Service "MSSQL`$$SQLInstance";
+  - echo Starting SQL Server
+  - ps: >-
+      $SQLInstance = $env:MSSQL;
+      Start-Service "MSSQL`$$SQLInstance";
 
 build_script:
-- echo Building database with latest data
-- ps: ./build/build.ps1 -SqlInstance "$env:DB_INSTANCE" -SqlLogin "$env:MSSQL_LOGIN" -SqlPass "$env:MSSQL_PASS"
+  - git checkout master -q
+  - git submodule init -q
+  - git submodule update -q
+  - ps: ./build/build.ps1 -SqlInstance "$env:DB_INSTANCE" -SqlLogin "$env:MSSQL_LOGIN" -SqlPass "$env:MSSQL_PASS"
 
 on_success:
   - git config --global credential.helper store
   - ps: Add-Content -Path "$HOME\.git-credentials" -Value "https://$($env:access_token):x-oauth-basic@github.com`n" -NoNewline
   - git config --global user.email "john@lowlydba.com"
   - git config --global user.name "John McCall"
-  - git checkout origin/master
+  - git add .
   - git commit -a -m "Auto add new database build."
-  -     git push origin/master HEAD:master
+  - git push origin/master HEAD:master
