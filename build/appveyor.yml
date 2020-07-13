@@ -54,7 +54,7 @@ build_script:
   - ps: ./build/build.ps1 -SqlInstance "$env:DB_INSTANCE" -SqlLogin "$env:MSSQL_LOGIN" -SqlPass "$env:MSSQL_PASS"
 
 after_build:
-  - ps: Get-ChildItem .\db\*.bak | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+  - ps: Get-ChildItem .\*.bak | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
 
 deploy:
   release: wapo-data-police-shootings-$(Get-Date -Format "yyyyMMdd")-$(appveyor_build_version)
