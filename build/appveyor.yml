@@ -56,7 +56,7 @@ after_build:
   - ps: $env:BUILDDATE = $(Get-Date -Format "yyyyMMdd")
 
 deploy:
-  release: wapo-data-police-shootings-$($env:BUILDDATE)-$(appveyor_build_version)
+  release: wapo-data-police-shootings-$(BUILDDATE)-$(appveyor_build_version)
   description: 'Release'
   provider: GitHub
   auth_token:
