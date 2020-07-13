@@ -49,15 +49,18 @@ build_script:
   - git submodule update -q
   - ps: ./build/build.ps1 -SqlInstance "$env:DB_INSTANCE" -SqlLogin "$env:MSSQL_LOGIN" -SqlPass "$env:MSSQL_PASS"
 
+after_build:
+  - ps: Get-ChildItem .\db\*.bak | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+
 deploy:
   release: wapo-data-police-shootings$(appveyor_build_version)
   description: 'Release'
   provider: GitHub
   auth_token:
     secure: VANUwPuFnS9gOTlQKMEUU2S2/y2do5xnwKFmeDDhfjUVm06fGyAdqRLhb+T2QJQz # your encrypted token from GitHub
-  artifact: /.*\.bak/            # upload all NuGet packages to release assets
+  artifact: .\db\*.bak
   draft: false
   prerelease: false
   on:
     branch: master                 # release from master branch only
-    APPVEYOR_REPO_TAG: true        # deploy on tag push only
+    APPVEYOR_REPO_TAG: false        # deploy on tag push only
