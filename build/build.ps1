@@ -40,6 +40,4 @@ Import-DbaCsv -Path $CsvFile -SqlInstance $SqlInstance -Database $SqlDatabase -T
 Invoke-DbaQuery -SqlInstance $SqlInstance -Database $SqlDatabase -File $PopulateFile -SqlCredential $SqlCred -EnableException
 
 #Create backups
-Remove-Item -Path (Join-Path $BackupDest *.bak) -Force
-Backup-DbaDatabase -SqlInstance $SqlInstance -Database $SqlDatabase -Path $BackupDest -Verify -FileCount 1 `
-    -IgnoreFileChecks -BuildPath -SqlCredential $SqlCred
+Backup-DbaDatabase -SqlInstance $SqlInstance -Database $SqlDatabase -Verify -Path $RepoRoot -IgnoreFileChecks -BuildPath:$true -SqlCredential $SqlCred
