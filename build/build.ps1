@@ -29,9 +29,6 @@ If ($PSBoundParameters.ContainsKey('SqlLogin') -and $PSBoundParameters.ContainsK
     $SqlCred = New-Object -Typename PSCredential $SqlLogin, $SqlSecurePass
 }
 
-# Update submodule
-
-
 #Build database
 Set-Location $RepoRoot
 Stop-DbaProcess -SqlInstance $SqlInstance -Database $SqlDatabase -SqlCredential $SqlCred | Out-Null

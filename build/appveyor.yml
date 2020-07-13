@@ -56,4 +56,4 @@ on_success:
   - git config --global user.name "John McCall"
   - git add .
   - git commit -a -m "Auto add new database build."
-  - git push origin/master HEAD:master
+  - git push origin master
