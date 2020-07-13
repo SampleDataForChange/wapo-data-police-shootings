@@ -12,7 +12,7 @@ max_jobs: 1
 clone_folder: C:\wapo-data-police-shootings
 
 environment:
-  my_variable:
+  TOKEN:
     secure: VANUwPuFnS9gOTlQKMEUU2S2/y2do5xnwKFmeDDhfjUVm06fGyAdqRLhb+T2QJQz
 
   MSSQL_LOGIN: sa
@@ -55,13 +55,14 @@ build_script:
 
 after_build:
   - ps: Get-ChildItem .\*.bak | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+  - ps: $env:BUILDDATE = $(Get-Date -Format "yyyyMMdd")
 
 deploy:
-  release: wapo-data-police-shootings-$(Get-Date -Format "yyyyMMdd")-$(appveyor_build_version)
+  release: wapo-data-police-shootings-$env:BUILDDATE-$(appveyor_build_version)
   description: 'Release'
   provider: GitHub
   auth_token:
-    secure: VANUwPuFnS9gOTlQKMEUU2S2/y2do5xnwKFmeDDhfjUVm06fGyAdqRLhb+T2QJQz # your encrypted token from GitHub
+    secure: $env:TOKEN
   artifact: /.*\.bak/
   draft: false
   prerelease: false
