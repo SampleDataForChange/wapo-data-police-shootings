@@ -1,6 +1,6 @@
 # Police Shooting Data
 
-![License](https://img.shields.io/badge/license-CC%20BY--NC--SA%204.0-green)
+[![License](https://img.shields.io/badge/license-CC%20BY--NC--SA%204.0-green)](LICENSE)
 ![MSSQL 2012+](https://img.shields.io/static/v1?label=MSSQL&message=2012%2b&color=green&logo=microsoft-sql-server)
 [![Sample Data For Change](https://img.shields.io/badge/Sample%20Data%20For%20Change-%E2%9D%A4-red)][sdfc] 
 
