@@ -39,6 +39,7 @@ environment:
 
 install:
   - ps: Install-Module DbaTools -Force -AllowClobber
+  - ps: choco install sqlite
 
   - echo Starting SQL Server
   - ps: >-
@@ -46,24 +47,28 @@ install:
       Start-Service "MSSQL`$$SQLInstance";
 
 build_script:
+  - echo Updating source repository data
   - git checkout master -q
   - git submodule init -q
   - git submodule update -q
-  - ps: ./build/build.ps1 -SqlInstance "$env:DB_INSTANCE" -SqlLogin "$env:MSSQL_LOGIN" -SqlPass "$env:MSSQL_PASS"
+  - echo Building MSSQL Database Artifact
+  - ps: ./build/mssql/build.ps1 -SqlInstance "$env:DB_INSTANCE"
+  - ps: ./build/sqlite/build_sqlite.ps1 -SqlInstance "$env:DB_INSTANCE"
 
 after_build:
   - ps: Get-ChildItem .\*.bak | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+  - ps: Get-ChildItem .\*.db | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
   - ps: $env:BUILDDATE = $(Get-Date -Format "yyyyMMdd")
 
 deploy:
   release: wapo-data-police-shootings-$(BUILDDATE)-$(appveyor_build_version)
-  description: 'Automated release of newest police shootings data'
+  description: 'Automated release of newest police shootings data.'
   provider: GitHub
   auth_token:
     secure: VANUwPuFnS9gOTlQKMEUU2S2/y2do5xnwKFmeDDhfjUVm06fGyAdqRLhb+T2QJQz # your encrypted token from GitHub
-  artifact: /.*\.bak/
+  artifact: /.*\.bak/, /.*\.db/
   draft: false
   prerelease: false
   on:
     branch: master                 # release from master branch only
-    APPVEYOR_REPO_TAG: false        # deploy on tag push only
+    APPVEYOR_REPO_TAG: false       # deploy on tag push only

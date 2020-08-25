@@ -1,9 +1,5 @@
 USE [wapo-data-police-shootings]
 GO
-/****** Object:  Schema [stage]    Script Date: 7/10/2020 8:38:05 PM ******/
-IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = N'stage')
-EXEC sys.sp_executesql N'CREATE SCHEMA [stage]'
-GO
 /****** Object:  Table [dbo].[Armed]    Script Date: 7/10/2020 8:38:05 PM ******/
 SET ANSI_NULLS ON
 GO
@@ -172,14 +168,13 @@ CREATE TABLE [dbo].[ThreatLevel](
 ) ON [PRIMARY]
 END
 GO
-/****** Object:  Table [stage].[PoliceShootings]    Script Date: 7/10/2020 8:38:06 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[stage].[PoliceShootings]') AND type in (N'U'))
 BEGIN
-CREATE TABLE [stage].[PoliceShootings](
+CREATE TABLE [dbo].[PoliceShootings_stg](
 	[ID] [varchar](100) NULL,
 	[victim_name] [nvarchar](500) NULL,
 	[shooting_date] [varchar](100) NULL,
@@ -279,7 +274,7 @@ BEGIN
 	--Reload Dynamic data
 	INSERT INTO dbo.Armed (armed_type)
 	SELECT DISTINCT armed
-	FROM stage.PoliceShootings;
+	FROM dbo.PoliceShootings_stg;
 
 	--Recreate FKs
 	ALTER TABLE [dbo].[PoliceShootings]  WITH CHECK ADD  CONSTRAINT [fk_policeshootings_armed] FOREIGN KEY([armed_id])
@@ -315,7 +310,7 @@ BEGIN
 	--Reload Dynamic data
 	INSERT INTO dbo.City (city_name, state_id)
 	SELECT DISTINCT city, [s].[id]
-	FROM stage.PoliceShootings AS [ps]
+	FROM dbo.PoliceShootings_stg AS [ps]
 		LEFT JOIN dbo.States AS [s] ON [s].[state_abbr] = [ps].[state]
 
 	--Recreate FKs
@@ -353,7 +348,7 @@ BEGIN
 	--Reload Dynamic data
 	INSERT INTO dbo.Flee (flee_type)
 	SELECT DISTINCT flee
-	FROM stage.PoliceShootings;
+	FROM dbo.PoliceShootings_stg;
 
 	--Recreate FKs
 	ALTER TABLE [dbo].[PoliceShootings]  WITH CHECK ADD  CONSTRAINT [fk_policeshootings_fleetype] FOREIGN KEY([flee_type])
@@ -389,7 +384,7 @@ BEGIN
 	--Reload Dynamic data
 	INSERT INTO dbo.MannerOfDeath (manner_of_death)
 	SELECT DISTINCT manner_of_death
-	FROM stage.PoliceShootings;
+	FROM dbo.PoliceShootings_stg;
 
 	--Recreate FKs
 	IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[fk_policeshootings_mannerofdeath]') AND parent_object_id = OBJECT_ID(N'[dbo].[PoliceShootings]'))
@@ -444,7 +439,7 @@ BEGIN
 		  ,CASE WHEN [ps].[body_camera] = 'True' THEN 1
 			ELSE 0
 			END AS [body_camera]
-	FROM stage.PoliceShootings AS [ps]
+	FROM dbo.PoliceShootings_stg AS [ps]
 		LEFT JOIN dbo.States as [st] ON [st].[state_abbr] = [ps].[state]
 		LEFT JOIN dbo.Race AS [r] ON [r].[race_abbr] = [ps].[race]
 		LEFT JOIN dbo.Sex AS [s] ON [s].[sex_abbr] = [ps].[gender]
@@ -655,7 +650,7 @@ BEGIN
 	--Reload Dynamic data
 	INSERT INTO dbo.ThreatLevel (threat_level)
 	SELECT DISTINCT threat_level
-	FROM stage.PoliceShootings;
+	FROM dbo.PoliceShootings_stg;
 
 	--Recreate FKs
 	ALTER TABLE [dbo].[PoliceShootings]  WITH CHECK ADD  CONSTRAINT [fk_policeshootings_threatlevel] FOREIGN KEY([threat_level])
@@ -815,6 +810,6 @@ GO
 IF NOT EXISTS (SELECT * FROM sys.fn_listextendedproperty(N'Description' , N'SCHEMA',N'dbo', N'TABLE',N'ThreatLevel', NULL,NULL))
 	EXEC sys.sp_addextendedproperty @name=N'Description', @value=N'Enumeration table for threat levels. The threat_level column was used to flag incidents for the story by Amy Brittain in October 2015. http://www.washingtonpost.com/sf/investigative/2015/10/24/on-duty-under-fire/' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'ThreatLevel'
 GO
-IF NOT EXISTS (SELECT * FROM sys.fn_listextendedproperty(N'Description' , N'SCHEMA',N'stage', N'TABLE',N'PoliceShootings', NULL,NULL))
-	EXEC sys.sp_addextendedproperty @name=N'Description', @value=N'Staging table for initial PoliceShootings data import' , @level0type=N'SCHEMA',@level0name=N'stage', @level1type=N'TABLE',@level1name=N'PoliceShootings'
+IF NOT EXISTS (SELECT * FROM sys.fn_listextendedproperty(N'Description' , N'SCHEMA',N'dbo', N'TABLE',N'PoliceShootings_stg', NULL,NULL))
+	EXEC sys.sp_addextendedproperty @name=N'Description', @value=N'Staging table for initial PoliceShootings data import' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'PoliceShootings_stg'
 GO
