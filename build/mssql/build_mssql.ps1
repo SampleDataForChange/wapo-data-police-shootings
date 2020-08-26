@@ -19,6 +19,7 @@ $RepoRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 $SqlDatabase = "wapo-data-police-shootings"
 $ImportTable = "PoliceShootings_stg"
 $ImportSchema = "dbo"
+$DateFormat = "yyyyMMdd"
 
 $SchemaFile = Join-Path $PSScriptRoot "schema.sql"
 $PopulateFile = Join-Path $PSScriptRoot "populate.sql"
@@ -42,4 +43,5 @@ Import-DbaCsv -Path $CsvFile -SqlInstance $SqlInstance -Database $SqlDatabase -T
 Invoke-DbaQuery -SqlInstance $SqlInstance -Database $SqlDatabase -File $PopulateFile -SqlCredential $SqlCred -EnableException
 
 #Create backups
-Backup-DbaDatabase -SqlInstance $SqlInstance -Database $SqlDatabase -Verify -Path $RepoRoot -IgnoreFileChecks -BuildPath:$true -SqlCredential $SqlCred
+Backup-DbaDatabase -SqlInstance $SqlInstance -Database $SqlDatabase -Verify -Path $RepoRoot -IgnoreFileChecks -BuildPath:$true `
+    -SqlCredential $SqlCred -TimeStampFormat $DateFormat

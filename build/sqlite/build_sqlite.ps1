@@ -7,7 +7,8 @@
 Write-Verbose "Generating SQLite database..."
 
 # Variables
-$Date = (Get-Date -Format "yyyyMMdd")
+$DateFormat = "yyyyMMdd"
+$Date = (Get-Date -Format $DateFormat)
 $ConverterZip = "export2sqlce.zip"
 $ConverterUri = "https://github.com/ErikEJ/SqlCeToolbox/releases/download/3.5.2/export2sqlce.zip"
 $SqlServerDatabase = "wapo-data-police-shootings"

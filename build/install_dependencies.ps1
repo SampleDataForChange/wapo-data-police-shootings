@@ -6,4 +6,4 @@ $SQLInstance = $env:MSSQL;
 Start-Service "MSSQL`$$SQLInstance";
 
 # SQLite
-choco install sqlite --limitoutput
+choco install sqlite --limitoutput --no-progress
