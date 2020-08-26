@@ -1,4 +1,4 @@
-﻿Write-Verbose "Building SQLite database..."
+﻿Write-Verbose "Generating SQLite database..."
 
 # Variables
 $Date = (Get-Date -Format "yyyyMMdd")

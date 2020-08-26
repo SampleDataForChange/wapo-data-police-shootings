@@ -12,6 +12,8 @@ If (!(Get-Module DbaTools)) {
     Install-Module DbaTools -Force
 }
 
+Write-Verbose "Generating SQL Server database..."
+
 [PSCredential]$SqlCred = $null
 $RepoRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 $SqlDatabase = "wapo-data-police-shootings"

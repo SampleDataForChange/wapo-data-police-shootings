@@ -1,4 +1,4 @@
-version: 0.0.{build}
+version: 0.1.{build}
 
 branches:
   only:
@@ -12,47 +12,21 @@ max_jobs: 1
 clone_folder: C:\wapo-data-police-shootings
 
 environment:
-
-  MSSQL_LOGIN: sa
-  MSSQL_PASS: Password12!
   
   matrix:
-  #- APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-  #  MSSQL: SQL2019
-  #  DB_INSTANCE: (local)\SQL2019
-    
-  #- APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-  #  MSSQL: SQL2017
-  #  DB_INSTANCE: (local)\SQL2017
-    
-  #- APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-  #  MSSQL: SQL2016
-  #  DB_INSTANCE: (local)\SQL2016
-    
-  #- APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-  #  MSSQL: SQL2014
-  #  DB_INSTANCE: (local)\SQL2014
-    
   - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
     MSSQL: SQL2012SP1
     DB_INSTANCE: localhost\SQL2012SP1
 
 install:
-  - ps: Install-Module DbaTools -Force -AllowClobber
-  - ps: choco install sqlite
-
-  - echo Starting SQL Server
-  - ps: >-
-      $SQLInstance = $env:MSSQL;
-      Start-Service "MSSQL`$$SQLInstance";
+  - ps: ./install_dependencies.ps1
 
 build_script:
   - echo Updating source repository data
   - git checkout master -q
   - git submodule init -q
   - git submodule update -q
-  - echo Building MSSQL Database Artifact
-  - ps: ./build/mssql/build.ps1 -SqlInstance "$env:DB_INSTANCE"
+  - ps: ./build/mssql/build_mssql.ps1 -SqlInstance "$env:DB_INSTANCE"
   - ps: ./build/sqlite/build_sqlite.ps1 -SqlInstance "$env:DB_INSTANCE"
 
 after_build:
