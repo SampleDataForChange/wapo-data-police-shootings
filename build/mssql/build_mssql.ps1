@@ -12,14 +12,16 @@ If (!(Get-Module DbaTools)) {
     Install-Module DbaTools -Force
 }
 
+Write-Verbose "Generating SQL Server database..."
+
 [PSCredential]$SqlCred = $null
+$RepoRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 $SqlDatabase = "wapo-data-police-shootings"
+$ImportTable = "PoliceShootings_stg"
+$ImportSchema = "dbo"
+
 $SchemaFile = Join-Path $PSScriptRoot "schema.sql"
 $PopulateFile = Join-Path $PSScriptRoot "populate.sql"
-$ImportTable = "PoliceShootings"
-$ImportSchema = "stage"
-$RepoRoot = Split-Path -Parent $PSScriptRoot
-$BackupDest = (Join-Path $RepoRoot "db")
 $WapoRoot = (Join-Path $RepoRoot "data-police-shootings")
 $CsvFile = (Join-Path $WapoRoot "fatal-police-shootings-data.csv")
 
