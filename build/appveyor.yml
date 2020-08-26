@@ -12,7 +12,6 @@ max_jobs: 1
 clone_folder: C:\wapo-data-police-shootings
 
 environment:
-  
   matrix:
   - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
     MSSQL: SQL2012SP1

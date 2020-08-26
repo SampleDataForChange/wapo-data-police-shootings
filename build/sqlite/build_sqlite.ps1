@@ -1,12 +1,17 @@
-﻿Write-Verbose "Generating SQLite database..."
+﻿[CmdletBinding()]
+    param (
+        [Parameter(Mandatory)]
+        [String]$SqlInstance
+    )
+
+Write-Verbose "Generating SQLite database..."
 
 # Variables
 $Date = (Get-Date -Format "yyyyMMdd")
 $ConverterZip = "export2sqlce.zip"
 $ConverterUri = "https://github.com/ErikEJ/SqlCeToolbox/releases/download/3.5.2/export2sqlce.zip"
-$SqlServer = "localhost"
 $SqlServerDatabase = "wapo-data-police-shootings"
-$SqlServerConn = "Data source=$SqlServer;Initial Catalog=$SqlServerDatabase;Integrated Security=True"
+$SqlServerConn = "Data source=$SqlInstance;Initial Catalog=$SqlServerDatabase;Integrated Security=True"
 $SqlLiteDatabaseFile = "wapo-data-police-shootings-" +  + $Date + ".db"
 $RepoRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 $SqliteCmd = "
