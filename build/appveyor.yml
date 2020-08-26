@@ -19,7 +19,7 @@ environment:
     DB_INSTANCE: localhost\SQL2012SP1
 
 install:
-  - ps: ./install_dependencies.ps1
+  - ps: ./build/install_dependencies.ps1
 
 build_script:
   - echo Updating source repository data
