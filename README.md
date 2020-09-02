@@ -8,14 +8,16 @@
 
 [![Sample Data For Change](https://img.shields.io/badge/Sample%20Data%20For%20Change-%E2%9D%A4-red)][sdfc]
 
-## Usage
-
 This project aims to make the Washington Post's police shooting data more easily
 accessible as sample data for examples, testing, and documentation as part of
 [Sample Data for Change][sdfc].
 
+## Usage
+
 Normalized databases are packaged into [releases](https://github.com/SampleDataForChange/wapo-data-police-shootings/releases) based off the latest raw data
 available as of build time.
+
+Documentation for the database is at [wapo-data-police-shootings.md](wapo-data-police-shootings.md).
 
 Formats supported:
 
