@@ -24,14 +24,6 @@ Formats supported:
 * SQL Server 2012+
 * SQLite 3.3
 
-## Notable Modifications
-
-While the goal of this project is not to modify the data, some changes have been made
-to increase its correctness:
-
-* After staging, the data attribute originally referred to as Gender is switched to Sex
-to better adhere to the [ISO/IEC 5218][iso] standard for representing human sexes.
-
 ## Attribution
 
 This work, "wapo-data-police-shootings", is a derivative of
@@ -45,7 +37,6 @@ by John McCall / [LowlyDBA][lowlydba].
 
 Want to see this data in more database formats? Open a [request][request].
 
-[iso]: https://en.wikipedia.org/wiki/ISO/IEC_5218
 [license]: https://creativecommons.org/licenses/by-nc-sa/4.0/
 [lowlydba]: https://github.com/LowlyDBA
 [ps-github]: https://github.com/washingtonpost/data-police-shootings

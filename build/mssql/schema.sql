@@ -83,7 +83,7 @@ CREATE TABLE [dbo].[PoliceShootings](
 	[manner_of_death_id] [smallint] NULL,
 	[armed_id] [tinyint] NULL,
 	[age] [tinyint] NULL,
-	[sex_id] [tinyint] NULL,
+	[gender_id] [tinyint] NULL,
 	[race] [tinyint] NULL,
 	[city_id] [int] NULL,
 	[signs_of_mental_illness] [bit] NULL,
@@ -115,18 +115,18 @@ CREATE TABLE [dbo].[Race](
 ) ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[Sex]    Script Date: 7/10/2020 8:38:06 PM ******/
+/****** Object:  Table [dbo].[Gender]    Script Date: 7/10/2020 8:38:06 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Sex]') AND type in (N'U'))
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Gender]') AND type in (N'U'))
 BEGIN
-CREATE TABLE [dbo].[Sex](
+CREATE TABLE [dbo].[Gender](
 	[id] [tinyint] IDENTITY(1,1) NOT NULL,
-	[sex_name] [varchar](20) NULL,
-	[sex_abbr] [char](1) NULL,
- CONSTRAINT [pk_sex_id] PRIMARY KEY CLUSTERED 
+	[gender_name] [varchar](20) NULL,
+	[gender_abbr] [char](1) NULL,
+ CONSTRAINT [pk_gender_id] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -234,12 +234,12 @@ GO
 IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[fk_policeshootings_race]') AND parent_object_id = OBJECT_ID(N'[dbo].[PoliceShootings]'))
 ALTER TABLE [dbo].[PoliceShootings] CHECK CONSTRAINT [fk_policeshootings_race]
 GO
-IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[fk_policeshootings_sex]') AND parent_object_id = OBJECT_ID(N'[dbo].[PoliceShootings]'))
-ALTER TABLE [dbo].[PoliceShootings]  WITH CHECK ADD  CONSTRAINT [fk_policeshootings_sex] FOREIGN KEY([sex_id])
-REFERENCES [dbo].[Sex] ([id])
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[fk_policeshootings_gender]') AND parent_object_id = OBJECT_ID(N'[dbo].[PoliceShootings]'))
+ALTER TABLE [dbo].[PoliceShootings]  WITH CHECK ADD  CONSTRAINT [fk_policeshootings_gender] FOREIGN KEY([gender_id])
+REFERENCES [dbo].[Gender] ([id])
 GO
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[fk_policeshootings_sex]') AND parent_object_id = OBJECT_ID(N'[dbo].[PoliceShootings]'))
-ALTER TABLE [dbo].[PoliceShootings] CHECK CONSTRAINT [fk_policeshootings_sex]
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[fk_policeshootings_gender]') AND parent_object_id = OBJECT_ID(N'[dbo].[PoliceShootings]'))
+ALTER TABLE [dbo].[PoliceShootings] CHECK CONSTRAINT [fk_policeshootings_gender]
 GO
 IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[fk_policeshootings_threatlevel]') AND parent_object_id = OBJECT_ID(N'[dbo].[PoliceShootings]'))
 ALTER TABLE [dbo].[PoliceShootings]  WITH CHECK ADD  CONSTRAINT [fk_policeshootings_threatlevel] FOREIGN KEY([threat_level])
@@ -428,7 +428,7 @@ BEGIN
 		  ,[mod].[id] AS [manner_of_death_id]
 		  ,[a].[id] AS [armed_id]
 		  ,[age]
-		  ,[s].[id] AS [sex_id]
+		  ,[s].[id] AS [gender_id]
 		  ,[r].[id] AS [race_id]
 		  ,[c].[city_id]
 		  ,CASE WHEN [ps].[signs_of_mental_illness] = 'True' THEN 1
@@ -442,7 +442,7 @@ BEGIN
 	FROM dbo.PoliceShootings_stg AS [ps]
 		LEFT JOIN dbo.States as [st] ON [st].[state_abbr] = [ps].[state]
 		LEFT JOIN dbo.Race AS [r] ON [r].[race_abbr] = [ps].[race]
-		LEFT JOIN dbo.Sex AS [s] ON [s].[sex_abbr] = [ps].[gender]
+		LEFT JOIN dbo.Gender AS [s] ON [s].[gender_abbr] = [ps].[gender]
 		LEFT JOIN dbo.MannerOfDeath AS [mod] ON [mod].[manner_of_death] = [ps].[manner_of_death]
 		LEFT JOIN dbo.ThreatLevel AS [tl] ON [tl].[threat_level] = [ps].[threat_level]
 		LEFT JOIN dbo.Flee AS [f] ON [f].[flee_type] = [ps].[flee]
@@ -490,40 +490,40 @@ BEGIN
 	ALTER TABLE [dbo].[PoliceShootings] CHECK CONSTRAINT [fk_policeshootings_race];
 END
 GO
-/****** Object:  StoredProcedure [dbo].[sp_ReloadSex]    Script Date: 7/10/2020 8:38:06 PM ******/
+/****** Object:  StoredProcedure [dbo].[sp_Reloadgender]    Script Date: 7/10/2020 8:38:06 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_ReloadSex]') AND type in (N'P', N'PC'))
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_Reloadgender]') AND type in (N'P', N'PC'))
 BEGIN
-EXEC dbo.sp_executesql @statement = N'CREATE PROCEDURE [dbo].[sp_ReloadSex] AS' 
+EXEC dbo.sp_executesql @statement = N'CREATE PROCEDURE [dbo].[sp_Reloadgender] AS' 
 END
 GO
 
-ALTER PROCEDURE [dbo].[sp_ReloadSex]
+ALTER PROCEDURE [dbo].[sp_ReloadGender]
 AS
 BEGIN
 	SET NOCOUNT ON;
 
 	--Drop FKs
 	IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[PoliceShootings]') AND type in (N'U'))
-	ALTER TABLE [dbo].[PoliceShootings] DROP CONSTRAINT [fk_policeshootings_sex]
+	ALTER TABLE [dbo].[PoliceShootings] DROP CONSTRAINT [fk_policeshootings_gender]
 
 	--Clear table
-	TRUNCATE TABLE dbo.Sex;
+	TRUNCATE TABLE dbo.Gender;
 
 	--Reload static data
-	INSERT INTO dbo.Sex VALUES ('Male', 'M');
-	INSERT INTO dbo.Sex VALUES ('Female', 'F');
+	INSERT INTO dbo.Gender VALUES ('Male', 'M');
+	INSERT INTO dbo.Gender VALUES ('Female', 'F');
 
 	--Recreate FKs
-	IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[fk_policeshootings_sex]') AND parent_object_id = OBJECT_ID(N'[dbo].[PoliceShootings]'))
-	ALTER TABLE [dbo].[PoliceShootings]  WITH CHECK ADD  CONSTRAINT [fk_policeshootings_sex] FOREIGN KEY([sex_id])
-	REFERENCES [dbo].[Sex] ([id]);
+	IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[fk_policeshootings_gender]') AND parent_object_id = OBJECT_ID(N'[dbo].[PoliceShootings]'))
+	ALTER TABLE [dbo].[PoliceShootings]  WITH CHECK ADD  CONSTRAINT [fk_policeshootings_gender] FOREIGN KEY([gender_id])
+	REFERENCES [dbo].[gender] ([id]);
 
-	IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[fk_policeshootings_sex]') AND parent_object_id = OBJECT_ID(N'[dbo].[PoliceShootings]'))
-	ALTER TABLE [dbo].[PoliceShootings] CHECK CONSTRAINT [fk_policeshootings_sex];
+	IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[fk_policeshootings_gender]') AND parent_object_id = OBJECT_ID(N'[dbo].[PoliceShootings]'))
+	ALTER TABLE [dbo].[PoliceShootings] CHECK CONSTRAINT [fk_policeshootings_gender];
 
 END
 GO
@@ -678,8 +678,8 @@ GO
 IF NOT EXISTS (SELECT * FROM sys.fn_listextendedproperty(N'Description' , N'SCHEMA',N'dbo', N'PROCEDURE',N'sp_ReloadRace', NULL,NULL))
 	EXEC sys.sp_addextendedproperty @name=N'Description', @value=N'Truncates and reloads the Race table with static reference data.' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'PROCEDURE',@level1name=N'sp_ReloadRace'
 GO
-IF NOT EXISTS (SELECT * FROM sys.fn_listextendedproperty(N'Description' , N'SCHEMA',N'dbo', N'PROCEDURE',N'sp_ReloadSex', NULL,NULL))
-	EXEC sys.sp_addextendedproperty @name=N'Description', @value=N'Truncates and reloads the Sex table with static reference data.' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'PROCEDURE',@level1name=N'sp_ReloadSex'
+IF NOT EXISTS (SELECT * FROM sys.fn_listextendedproperty(N'Description' , N'SCHEMA',N'dbo', N'PROCEDURE',N'sp_Reloadgender', NULL,NULL))
+	EXEC sys.sp_addextendedproperty @name=N'Description', @value=N'Truncates and reloads the gender table with static reference data.' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'PROCEDURE',@level1name=N'sp_Reloadgender'
 GO
 IF NOT EXISTS (SELECT * FROM sys.fn_listextendedproperty(N'Description' , N'SCHEMA',N'dbo', N'PROCEDURE',N'sp_ReloadStates', NULL,NULL))
 	EXEC sys.sp_addextendedproperty @name=N'Description', @value=N'Truncates and reloads the States table with static reference data.' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'PROCEDURE',@level1name=N'sp_ReloadStates'
@@ -744,8 +744,8 @@ GO
 IF NOT EXISTS (SELECT * FROM sys.fn_listextendedproperty(N'Description' , N'SCHEMA',N'dbo', N'TABLE',N'PoliceShootings', N'COLUMN',N'age'))
 	EXEC sys.sp_addextendedproperty @name=N'Description', @value=N'Age of victim' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'PoliceShootings', @level2type=N'COLUMN',@level2name=N'age'
 GO
-IF NOT EXISTS (SELECT * FROM sys.fn_listextendedproperty(N'Description' , N'SCHEMA',N'dbo', N'TABLE',N'PoliceShootings', N'COLUMN',N'sex_id'))
-	EXEC sys.sp_addextendedproperty @name=N'Description', @value=N'Sex of victim' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'PoliceShootings', @level2type=N'COLUMN',@level2name=N'sex_id'
+IF NOT EXISTS (SELECT * FROM sys.fn_listextendedproperty(N'Description' , N'SCHEMA',N'dbo', N'TABLE',N'PoliceShootings', N'COLUMN',N'gender_id'))
+	EXEC sys.sp_addextendedproperty @name=N'Description', @value=N'The gender of the victim. The Post identifies victims by the gender they identify with if reports indicate that it differs from their biological sex.' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'PoliceShootings', @level2type=N'COLUMN',@level2name=N'gender_id'
 GO
 IF NOT EXISTS (SELECT * FROM sys.fn_listextendedproperty(N'Description' , N'SCHEMA',N'dbo', N'TABLE',N'PoliceShootings', N'COLUMN',N'race'))
 	EXEC sys.sp_addextendedproperty @name=N'Description', @value=N'Race of victim' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'PoliceShootings', @level2type=N'COLUMN',@level2name=N'race'
@@ -777,17 +777,17 @@ GO
 IF NOT EXISTS (SELECT * FROM sys.fn_listextendedproperty(N'Description' , N'SCHEMA',N'dbo', N'TABLE',N'Race', NULL,NULL))
 	EXEC sys.sp_addextendedproperty @name=N'Description', @value=N'Enumeration table of races' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Race'
 GO
-IF NOT EXISTS (SELECT * FROM sys.fn_listextendedproperty(N'Description' , N'SCHEMA',N'dbo', N'TABLE',N'Sex', N'COLUMN',N'id'))
-	EXEC sys.sp_addextendedproperty @name=N'Description', @value=N'Unique identifier for sex' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Sex', @level2type=N'COLUMN',@level2name=N'id'
+IF NOT EXISTS (SELECT * FROM sys.fn_listextendedproperty(N'Description' , N'SCHEMA',N'dbo', N'TABLE',N'Gender', N'COLUMN',N'id'))
+	EXEC sys.sp_addextendedproperty @name=N'Description', @value=N'Unique identifier for gender' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Gender', @level2type=N'COLUMN',@level2name=N'id'
 GO
-IF NOT EXISTS (SELECT * FROM sys.fn_listextendedproperty(N'Description' , N'SCHEMA',N'dbo', N'TABLE',N'Sex', N'COLUMN',N'sex_name'))
-	EXEC sys.sp_addextendedproperty @name=N'Description', @value=N'Full name of sex types' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Sex', @level2type=N'COLUMN',@level2name=N'sex_name'
+IF NOT EXISTS (SELECT * FROM sys.fn_listextendedproperty(N'Description' , N'SCHEMA',N'dbo', N'TABLE',N'Gender', N'COLUMN',N'gender_name'))
+	EXEC sys.sp_addextendedproperty @name=N'Description', @value=N'Full name of gender' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Gender', @level2type=N'COLUMN',@level2name=N'gender_name'
 GO
-IF NOT EXISTS (SELECT * FROM sys.fn_listextendedproperty(N'Description' , N'SCHEMA',N'dbo', N'TABLE',N'Sex', N'COLUMN',N'sex_abbr'))
-	EXEC sys.sp_addextendedproperty @name=N'Description', @value=N'Single letter abbreviation of sex types' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Sex', @level2type=N'COLUMN',@level2name=N'sex_abbr'
+IF NOT EXISTS (SELECT * FROM sys.fn_listextendedproperty(N'Description' , N'SCHEMA',N'dbo', N'TABLE',N'Gender', N'COLUMN',N'gender_abbr'))
+	EXEC sys.sp_addextendedproperty @name=N'Description', @value=N'Single letter abbreviation of gender' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Gender', @level2type=N'COLUMN',@level2name=N'gender_abbr'
 GO
-IF NOT EXISTS (SELECT * FROM sys.fn_listextendedproperty(N'Description' , N'SCHEMA',N'dbo', N'TABLE',N'Sex', NULL,NULL))
-	EXEC sys.sp_addextendedproperty @name=N'Description', @value=N'Enumeration table for sex' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Sex'
+IF NOT EXISTS (SELECT * FROM sys.fn_listextendedproperty(N'Description' , N'SCHEMA',N'dbo', N'TABLE',N'Gender', NULL,NULL))
+	EXEC sys.sp_addextendedproperty @name=N'Description', @value=N'Enumeration table for gender' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Gender'
 GO
 IF NOT EXISTS (SELECT * FROM sys.fn_listextendedproperty(N'Description' , N'SCHEMA',N'dbo', N'TABLE',N'States', N'COLUMN',N'id'))
 	EXEC sys.sp_addextendedproperty @name=N'Description', @value=N'Unique identifier for states' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'States', @level2type=N'COLUMN',@level2name=N'id'
