@@ -6,7 +6,7 @@ branches:
 skip_tags: true
 pull_requests:
   do_not_increment_build_number: false
-  
+
 max_jobs: 1
 
 clone_folder: C:\wapo-data-police-shootings
@@ -38,7 +38,7 @@ deploy:
   description: 'Automated release of newest police shootings data.'
   provider: GitHub
   auth_token:
-    secure: VANUwPuFnS9gOTlQKMEUU2S2/y2do5xnwKFmeDDhfjUVm06fGyAdqRLhb+T2QJQz # your encrypted token from GitHub
+    secure: lZ4bLR6VHQtDWZrv05rZr06pFqVmpJKPdjJES5k6U0qgjx40PNRS8pRLzI7gStPn # your encrypted token from GitHub
   artifact: /.*\.bak/, /.*\.db/
   draft: false
   prerelease: false
