@@ -1,5 +1,12 @@
 # Police Shooting Data
 
+# Publishing Pause
+
+Since the wapo repo [changed its formatting](https://github.com/washingtonpost/data-police-shootings/tree/master#data-versions) with a new v2 data source, and stopped updating v1, this project is not able to pull in fresh data. I do not have time currently to make the necessary updates to get it to track the new data format, but welcome any contributions towards getting it fixed.
+
+---
+
+
 [![License](https://img.shields.io/badge/license-CC%20BY--NC--SA%204.0-blue)](LICENSE)
 ![MSSQL 2012+](https://img.shields.io/static/v1?label=MSSQL&message=2012%2b&color=blue&logo=microsoft-sql-server)
 ![SQLIte 3.3](https://img.shields.io/badge/SQLite-3.3-blue?logo=SQLite)
